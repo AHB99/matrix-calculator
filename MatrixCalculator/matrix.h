@@ -14,7 +14,6 @@ public:
 	Matrix() = default;
 	//constructs zero matrix of size rows x columns
 	Matrix(size_t rows, size_t columns) : matrix(std::vector<std::vector<double>>(rows, std::vector<double>(columns))) { }
-	virtual ~Matrix() = default;
 
 	std::ostream& print(std::ostream&) const;
 	std::istream& modifyMatrixByInput(std::istream&);
