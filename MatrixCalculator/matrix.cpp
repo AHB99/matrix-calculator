@@ -91,7 +91,7 @@ Matrix multiplyMatrices(const Matrix& mat1, const Matrix& mat2) {
 }
 
 //sums diagonal
-double SquareMatrix::trace() const {
+double Matrix::trace() const {
 	double result = 0;
 	for (size_t i = 0; i < this->getRows(); ++i) {
 		result += this->getMatrixValue(i, i);
@@ -100,9 +100,9 @@ double SquareMatrix::trace() const {
 }
 
 //extracts the submatrix by excluding the given row and column
-SquareMatrix SquareMatrix::squareMatrixCutter(size_t rowpos, size_t colpos) const {
+Matrix Matrix::squareMatrixCutter(size_t rowpos, size_t colpos) const {
 	//size will be current-1 due to exclusion
-	SquareMatrix result((this->getRows()) - 1);
+	Matrix result((this->getRows()) - 1, (this->getRows()) - 1);
 	//Indices of result are kept seperate from indices of source matrix (i and j) to search and fill correctly
 	size_t resultRowIndex = 0;
 
@@ -121,7 +121,7 @@ SquareMatrix SquareMatrix::squareMatrixCutter(size_t rowpos, size_t colpos) cons
 	return result;
 }
 
-double SquareMatrix::findDeterminant() const {
+double Matrix::findDeterminant() const {
 	if ((this->getRows()) == 2) {
 		//ad-bc for trivial 2x2 matrix
 		double result = (((this->getMatrixValue(0, 0)) * (this->getMatrixValue(1, 1))) - ((this->getMatrixValue(0, 1)) * (this->getMatrixValue(1, 0))));
@@ -136,7 +136,7 @@ double SquareMatrix::findDeterminant() const {
 			if (j % 2 != 0) {
 				cofactorCoefficient = -1;
 			}
-			SquareMatrix cutMatrix = this->squareMatrixCutter(0, j);
+			Matrix cutMatrix = this->squareMatrixCutter(0, j);
 			finalResult += (cutMatrix.findDeterminant())*(this->getMatrixValue(0, j))*cofactorCoefficient;
 		}
 		return finalResult;
@@ -280,17 +280,17 @@ Matrix Matrix::findReducedRowEchelonForm() const {
 }
 
 //for inverse usage
-SquareMatrix buildIdentity(size_t n) {
-	SquareMatrix result(n);
+Matrix buildIdentity(size_t n) {
+	Matrix result(n,n);
 	for (size_t i = 0; i < n; ++i) {
 		result.setMatrixValue(i, i, 1);
 	}
 	return result;
 }
 //for inverse usage
-Matrix SquareMatrix::addIdentityToRightSide() const {
+Matrix Matrix::addIdentityToRightSide() const {
 	Matrix result((this->getRows()), (this->getRows()) * 2);
-	SquareMatrix tempIdentity(buildIdentity((this->getRows())));
+	Matrix tempIdentity(buildIdentity((this->getRows())));
 	for (size_t i = 0; i < (this->getRows()); ++i) {
 		for (size_t j = 0; j < (this->getRows()); ++j) {
 			result.setMatrixValue(i, j, this->getMatrixValue(i, j));
@@ -302,8 +302,8 @@ Matrix SquareMatrix::addIdentityToRightSide() const {
 	return result;
 }
 //for inverse usage
-SquareMatrix extractRightSideSquareMatrix(const Matrix& mat1) {
-	SquareMatrix result(mat1.getRows());
+Matrix extractRightSideSquareMatrix(const Matrix& mat1) {
+	Matrix result(mat1.getRows(), mat1.getRows());
 	for (size_t i = 0; i < mat1.getRows(); ++i) {
 		for (size_t j = 0; j < mat1.getRows(); ++j) {
 			result.setMatrixValue(i, j, mat1.getMatrixValue(i, j + mat1.getRows()));
@@ -312,10 +312,10 @@ SquareMatrix extractRightSideSquareMatrix(const Matrix& mat1) {
 	return result;
 }
 
-SquareMatrix SquareMatrix::findInverse() const {
+Matrix Matrix::findInverse() const {
 	//adds identity to right side of matrix. performs RREF. extracts inverse from right side.
 	Matrix matrixWithIdentity = this->addIdentityToRightSide();
 	Matrix solvedReducedRowEchelonForm = matrixWithIdentity.findReducedRowEchelonForm();
-	SquareMatrix result = extractRightSideSquareMatrix(solvedReducedRowEchelonForm);
+	Matrix result = extractRightSideSquareMatrix(solvedReducedRowEchelonForm);
 	return result;
 }

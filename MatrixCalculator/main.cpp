@@ -112,7 +112,7 @@ bool matrixCalculatorTurn() {
 		size_t dim;
 		cout << "[Matrix] Dimension: ";
 		cin >> dim;
-		SquareMatrix mat(dim);
+		Matrix mat(dim,dim);
 		cout << "Enter Matrix (" << dim << "x" << dim << "):\n";
 		mat.modifyMatrixByInput(cin);
 		if (selection == 'h') {
@@ -128,7 +128,7 @@ bool matrixCalculatorTurn() {
 		else if (selection == 'j') {
 			double determinantTest = mat.findDeterminant();
 			if (determinantTest != 0) {
-				SquareMatrix result = mat.findInverse();
+				Matrix result = mat.findInverse();
 				cout << "Inverse =\n";
 				result.print(cout);
 				cout << endl;

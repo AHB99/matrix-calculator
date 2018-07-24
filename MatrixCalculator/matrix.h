@@ -26,8 +26,12 @@ public:
 	Matrix transpose() const;
 	Matrix findEchelonForm() const;
 	Matrix findReducedRowEchelonForm() const;
+	//methods for square matrices
+	double trace() const;
+	double findDeterminant() const;
+	Matrix findInverse() const;
 
-protected:
+private:
 	//Echelon Form helper functions
 	void swapRows(size_t, size_t);
 	void multiplyRowByCoefficient(size_t, double);
@@ -39,25 +43,12 @@ protected:
 	bool isNonzeroRow(size_t) const;
 	size_t findFirstNonzeroRowFromBottom() const;
 
-	std::vector<std::vector<double>> matrix;
-};
-
-class SquareMatrix : public Matrix {
-public:
-	SquareMatrix() = default;
-	SquareMatrix(size_t rs) : Matrix(rs, rs) {}
-	SquareMatrix(Matrix sqrM) : Matrix(sqrM) {}
-
-	double trace() const;
-	double findDeterminant() const;
-	SquareMatrix findInverse() const;
-
-private:
 	//Inverse helper function
 	Matrix addIdentityToRightSide() const;
 	//Determinant helper function
-	SquareMatrix squareMatrixCutter(size_t, size_t) const;
-};
+	Matrix squareMatrixCutter(size_t, size_t) const;
 
+	std::vector<std::vector<double>> matrix;
+};
 
 #endif
